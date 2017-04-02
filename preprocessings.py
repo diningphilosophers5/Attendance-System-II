@@ -10,7 +10,7 @@ import openface.helper
 from openface.data import iterImgs
 
 fileDir = os.path.dirname(os.path.realpath(__file__))
-modelDir = os.path.join(fileDir, '..', 'models')
+modelDir = os.path.join(fileDir, '.', 'models')
 dlibModelDir = os.path.join(modelDir, 'dlib')
 openfaceModelDir = os.path.join(modelDir, 'openface')
 
@@ -59,5 +59,9 @@ def alignMain(outputDir, inputDir):
         if outRgb is not None:
             outBgr = cv2.cvtColor(outRgb, cv2.COLOR_RGB2BGR)
             cv2.imwrite(imgName, outBgr)
+            
+def run_script():
+    os.system("./batch-represent/main.lua -outDir ./generated-embeddings/ -data ./aligned-images/")
         
-alignMain('/home/ishan/Desktop/Project/alignedimages','/home/ishan/Desktop/Project/PICS')
+#alignMain('/home/ishan/Desktop/Project/aligned','/home/ishan/Desktop/Project/PICS')
+run_script()
