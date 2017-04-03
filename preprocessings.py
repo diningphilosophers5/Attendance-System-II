@@ -63,5 +63,5 @@ def alignMain(outputDir, inputDir):
 def run_script():
     os.system("./batch-represent/main.lua -outDir ./generated-embeddings/ -data ./aligned-images/")
         
-#alignMain('/home/ishan/Desktop/Project/aligned','/home/ishan/Desktop/Project/PICS')
+alignMain('./aligned-images/','./training-images/')
 run_script()
