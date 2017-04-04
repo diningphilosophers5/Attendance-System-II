@@ -6,8 +6,9 @@ Run this script to start the application
 
 from Tkinter import *
 import tkFileDialog
-from modules.training import *
-from modules.predict import *
+from training import *
+from preprocessings import *
+from predict import *
 
 def browse_dir():
     """Opens a dialog box to browse to the required directory in the GUI
@@ -47,7 +48,11 @@ def trainOnDataset(event):
     txt.delete(0.0, END)
     txt.insert(END, 'Training on dataset.\n')
     path = browse_dir()
-    train_models(path)
+    alignpath = './aligned-images/'
+    alignMain('./aligned-images/',path)
+    run_script()
+    embeddingspath = './generated-embeddings'
+    train(embeddingspath)
     status.config(text='Training done successfully.')
     txt.delete(0.0, END)
     txt.insert(END, 'Prediction Models are ready.\n')
@@ -65,7 +70,7 @@ def processVideo(event):
     txt.delete(0.0, END)
     txt.insert(END, 'Processing video.\n')
     path = browse_file()
-    result = predict_video(path)
+    result = processvideo(path)
     status.config(text='Result computed successfully.')
     presentlist = list(result)
     txt.delete(0.0, END)
@@ -92,10 +97,10 @@ def testImages(event):
     result = identify_images(path)
     status.config(text='Result computed successfully.')
     txt.delete(0.0, END)
-    txt.insert(END, 'Persons identified are:\n')
+    txt.insert(END, 'Persons identified in images are:\n')
     num = 1
     for label in result:
-         txt.insert(END, str(num) + '. ' + result[label] + '\n')
+         txt.insert(END, str(num) + '. ' + str(label) + ' :'+ str(result[label]) + '\n')
          num += 1
     if num == 1:
         txt.delete(0.0, END)

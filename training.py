@@ -39,4 +39,4 @@ def train(workDir):
     with open(fName, 'w') as f:
         pickle.dump((le, clf), f)
         
-train("./generated-embeddings")
+#train("./generated-embeddings")

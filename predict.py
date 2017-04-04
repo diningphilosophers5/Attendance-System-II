@@ -60,6 +60,7 @@ def processImage(img, multiple=True):
     reps = getRepImg(img)
     if len(reps) > 1:
         print("List of faces in image from left to right")
+    lst = []
     for r in reps:
         rep = r[1].reshape(1, -1)
         bbx = r[0]
@@ -70,8 +71,10 @@ def processImage(img, multiple=True):
         if multiple:
             print("Predict {} @ x={} with {:.2f} confidence.".format(person, bbx,
                                                                      confidence))
+            lst.append(person)
         else:
-            print("Predict {} with {:.2f} confidence.".format(person, confidence))    
+            print("Predict {} with {:.2f} confidence.".format(person, confidence))
+    return lst    
 
 def getRepVid(bgrImg):
     if bgrImg is None:
@@ -118,32 +121,54 @@ def processFrame(frame):
     
 def processVideo(videoPath):
     video_capture = cv2.VideoCapture(videoPath)
-    video_capture.set(3, 320)
-    video_capture.set(4, 240)
+    time = 0
     confidenceList = []
+    result = set()
     success = True
     while success:
+        video_capture.set(cv2.CAP_PROP_POS_MSEC, time)
+        time += 500
         success, frame = video_capture.read()
-        if ret:
+        if success:
             persons, confidences = processFrame(frame)
-            print "P: " + str(persons) + " C: " + str(confidences)
+            #print "P: " + str(persons) + " C: " + str(confidences)
             try:
                 # append with two floating point precision
-                confidenceList.append('%.2f' % confidences[0])
+                #confidenceList.append('%.2f' % confidences[0])
+                i =0
+                for person in persons:
+                    if confidences[i] > 0.09:
+                        result.add(person)
+                        print person
+                    i = i+1
             except:
                 # If there is no face detected, confidences matrix will be empty.
                 # We can simply ignore it.
                 pass
-            for i, c in enumerate(confidences):
-                if c <= 0.1:  # 0.5 is kept as threshold for known face.
-                    persons[i] = "_unknown"
+            #for i, c in enumerate(confidences):
+                #if c <= 0.1:  # 0.5 is kept as threshold for known face.
+                    #persons[i] = "_unknown"
     
                     # Print the person name and conf value on the frame
-            cv2.putText(frame, "P: {} C: {}".format(persons, confidences),
-                        (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-            cv2.imshow('', frame)   
+            #cv2.putText(frame, "P: {} C: {}".format(persons, confidences),
+                        #(50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+            #cv2.imshow('', frame)   
     # When everything is done, release the capture
     video_capture.release()
     cv2.destroyAllWindows()
+    print result
+    return result
+    
+def identify_images(path):
+    result = {}
+    image_paths = [os.path.join(path, f) for f in os.listdir(path)]
+    for image_path in image_paths:
+        lst = processImage(image_path)
+        result[image_path] = lst
+    #print result
+    return result  
+    
         
-processImage("/home/ishan/Desktop/Project/newApp/test3.JPG")
+#processImage("/home/ishan/Desktop/Project/newApp/test3.JPG")
+#identify_images("/home/ishan/Desktop/Project/CROP/")
+#processVideo("/home/ishan/Desktop/Attendance-System-II/testvid1.mp4")
