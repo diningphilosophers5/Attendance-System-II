@@ -16,7 +16,7 @@ dlibModelDir = os.path.join(modelDir, 'dlib')
 openfaceModelDir = os.path.join(modelDir, 'openface')
 
 
-def train(workDir):
+def createClassifier(workDir):
     print("Loading embeddings.")
     fname = "{}/labels.csv".format(workDir)
     labels = pd.read_csv(fname, header=None).as_matrix()[:, 1]

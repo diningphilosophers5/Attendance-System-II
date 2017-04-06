@@ -52,7 +52,7 @@ def trainOnDataset(event):
     alignMain(alignpath, path)
     run_script()
     embeddingspath = './generated-embeddings'
-    train(embeddingspath)
+    createClassifier(embeddingspath)
     status.config(text='Training done successfully.')
     txt.delete(0.0, END)
     txt.insert(END, 'Prediction Models are ready.\n')
