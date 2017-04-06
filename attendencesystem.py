@@ -46,10 +46,10 @@ def trainOnDataset(event):
     :param event: The function is bounded to the button train("Train on Data") and activated by left click event.
     """
     txt.delete(0.0, END)
-    txt.insert(END, 'Training on dataset.\n')
+    txt.insert(END, 'Training on dataset. Please wait...\n')
     path = browse_dir()
     alignpath = './aligned-images/'
-    alignMain('./aligned-images/',path)
+    alignMain(alignpath, path)
     run_script()
     embeddingspath = './generated-embeddings'
     train(embeddingspath)
@@ -70,7 +70,7 @@ def processVideo(event):
     txt.delete(0.0, END)
     txt.insert(END, 'Processing video.\n')
     path = browse_file()
-    result = processvideo(path)
+    result = predictFromVideo(path)
     status.config(text='Result computed successfully.')
     presentlist = list(result)
     txt.delete(0.0, END)
@@ -82,7 +82,7 @@ def processVideo(event):
     if num == 1:
         txt.delete(0.0, END)
         txt.insert(END, 'No persons found.' + '\n')
-    #calculateVideo.configure(background=orig_color_calculatevideo)
+    calculateVideo.configure(background=orig_color_calculatevideo)
 
 def testImages(event):
     """Function get called on left click event on the button 'calculateImages'

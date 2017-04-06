@@ -1,28 +1,27 @@
-import argparse
 import cv2
 import os
 import pickle
-
 from operator import itemgetter
-
 import numpy as np
-np.set_printoptions(precision=2)
 import pandas as pd
-
 import openface
-
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
+
+np.set_printoptions(precision=2)
 
 fileDir = os.path.dirname(os.path.realpath(__file__))
 modelDir = os.path.join(fileDir, '.', 'models')
 dlibModelDir = os.path.join(modelDir, 'dlib')
 openfaceModelDir = os.path.join(modelDir, 'openface')
+# modelDir = "./models"
+# dlibModelDir = "./models/dlib"
+# openfaceModelDir = "./model/openface"
 
 size = 96
-dlibFacePredictor = default=os.path.join(dlibModelDir,"shape_predictor_68_face_landmarks.dat")
+dlibFacePredictor = default = os.path.join(dlibModelDir, "shape_predictor_68_face_landmarks.dat")
 align = openface.AlignDlib(dlibFacePredictor)
-networkModel = os.path.join(openfaceModelDir,'nn4.small2.v1.t7')
+networkModel = os.path.join(openfaceModelDir, 'nn4.small2.v1.t7')
 net = openface.TorchNeuralNet(networkModel, imgDim=size)
 classifierModel = "./generated-embeddings/classifier.pkl"
 
@@ -119,7 +118,7 @@ def processFrame(frame):
         confidences.append(predictions[maxI])        
     return (persons, confidences)
     
-def processVideo(videoPath):
+def predictFromVideo(videoPath):
     video_capture = cv2.VideoCapture(videoPath)
     time = 0
     confidenceList = []
@@ -127,11 +126,11 @@ def processVideo(videoPath):
     success = True
     while success:
         video_capture.set(cv2.CAP_PROP_POS_MSEC, time)
-        time += 500
+        time += 300
         success, frame = video_capture.read()
         if success:
             persons, confidences = processFrame(frame)
-            #print "P: " + str(persons) + " C: " + str(confidences)
+            print "P: " + str(persons) + " C: " + str(confidences)
             try:
                 # append with two floating point precision
                 #confidenceList.append('%.2f' % confidences[0])
@@ -151,8 +150,10 @@ def processVideo(videoPath):
     
                     # Print the person name and conf value on the frame
             #cv2.putText(frame, "P: {} C: {}".format(persons, confidences),
-                        #(50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-            #cv2.imshow('', frame)   
+            #            (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+            cv2.imshow('', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
     # When everything is done, release the capture
     video_capture.release()
     cv2.destroyAllWindows()
@@ -170,5 +171,5 @@ def identify_images(path):
     
         
 #processImage("/home/ishan/Desktop/Project/newApp/test3.JPG")
-#identify_images("/home/ishan/Desktop/Project/CROP/")
-#processVideo("/home/ishan/Desktop/Attendance-System-II/testvid1.mp4")
+#identify_images("/media/akash/Storage/Projects/FinalYear/CROP")
+#processVideo("/home/akash/Videos/nosound270480.mkv")

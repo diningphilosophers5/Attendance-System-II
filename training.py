@@ -1,23 +1,20 @@
 import cv2
 import os
 import pickle
-
 from operator import itemgetter
-
 import numpy as np
-np.set_printoptions(precision=2)
 import pandas as pd
-
 import openface
-
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
 
+np.set_printoptions(precision=2)
 
 fileDir = os.path.dirname(os.path.realpath(__file__))
 modelDir = os.path.join(fileDir, '.', 'models')
 dlibModelDir = os.path.join(modelDir, 'dlib')
 openfaceModelDir = os.path.join(modelDir, 'openface')
+
 
 def train(workDir):
     print("Loading embeddings.")

@@ -4,7 +4,6 @@ import numpy as np
 import os
 import random
 import shutil
-
 import openface
 import openface.helper
 from openface.data import iterImgs
@@ -46,6 +45,7 @@ def alignMain(outputDir, inputDir):
     nFallbacks = 0
     for imgObject in imgs:
         print("=== {} ===".format(imgObject.path))
+
         outDir = os.path.join(outputDir, imgObject.cls)
         openface.helper.mkdirP(outDir)
         outputPrefix = os.path.join(outDir, imgObject.name)
@@ -59,9 +59,7 @@ def alignMain(outputDir, inputDir):
         if outRgb is not None:
             outBgr = cv2.cvtColor(outRgb, cv2.COLOR_RGB2BGR)
             cv2.imwrite(imgName, outBgr)
-            
+
+
 def run_script():
     os.system("./batch-represent/main.lua -outDir ./generated-embeddings/ -data ./aligned-images/")
-        
-#alignMain('./aligned-images/','./training-images/')
-#run_script()
